@@ -153,27 +153,23 @@ class GraphQLSession:
         if files:
             for value in files.values():
                 if len(value) != 3:
-                    raise ValueError('The values of the files directory must be '
-                                     '3-tuples with the filename, the file object and '
-                                     'the content type')
+                    raise ValueError(
+                        "The values of the files directory must be "
+                        "3-tuples with the filename, the file object and "
+                        "the content type"
+                    )
 
         # query without file upload
         if not files or len(files) == 0:
-            payload = {'query': query_string}
+            payload = {"query": query_string}
             if variables:
-                payload['variables'] = variables
+                payload["variables"] = variables
 
             return self._session.post(self._uri, json=payload)
 
         # query with file upload
-        operations = {
-            'query': query_string,
-            'variables': variables
-        }
-        data = {
-            'operations': json.dumps(operations),
-            'map': json.dumps(file_map)
-        }
+        operations = {"query": query_string, "variables": variables}
+        data = {"operations": json.dumps(operations), "map": json.dumps(file_map)}
         file_data = {key: files[key] for key in files.keys()}
 
         return self._session.post(self._uri, data=data, files=file_data)
@@ -185,4 +181,3 @@ class GraphQLSession:
     @auth.setter
     def auth(self, auth):
         self._session.auth = auth
-
